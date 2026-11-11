@@ -1,1 +1,139 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100b20">
+<title>LUCY AI</title>
+
+<style>
+body {
+  margin: 0;
+  background: #100b20;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+.app { padding: 30px 15px; }
+h1 { color: #c69aff; font-size: 35px; }
+.orb {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#a855f7,#312e81);
+  display: grid;
+  place-items: center;
+  margin: 40px auto;
+  font-size: 65px;
+  box-shadow: 0 0 40px #9333ea;
+}
+#chat {
+  max-width: 500px;
+  margin: 20px auto;
+  text-align: left;
+}
+.message {
+  padding: 12px;
+  margin: 8px;
+  background: #29203e;
+  border-radius: 12px;
+}
+input {
+  width: 65%;
+  padding: 14px;
+  border-radius: 20px;
+  border: none;
+}
+button {
+  background: #9333ea;
+  color: white;
+  border: none;
+  padding: 13px 18px;
+  border-radius: 20px;
+  margin: 6px;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <h1>LUCY AI</h1>
+  <p>Your personal voice assistant ❤️</p>
+
+  <div class="orb">L</div>
+  <h3 id="status">Hello! I'm Lucy.</h3>
+
+  <div id="chat"></div>
+
+  <input id="message" placeholder="Talk to Lucy...">
+  <button onclick="sendMessage()">Send</button>
+  <button onclick="listen()">🎙️ Speak</button>
+</div>
+
+<script>
+function speak(text) {
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "en-IN";
+  speech.rate = 0.95;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(speech);
+}
+
+function addMessage(who, text) {
+  const chat = document.getElementById("chat");
+  const p = document.createElement("div");
+  p.className = "message";
+  p.textContent = who + ": " + text;
+  chat.appendChild(p);
+}
+
+function sendMessage() {
+  const input = document.getElementById("message");
+  const text = input.value.trim();
+  if (!text) return;
+
+  addMessage("You", text);
+
+  const reply = "Hello! I'm Lucy. My AI brain is being developed!";
+  addMessage("Lucy", reply);
+  speak(reply);
+
+  input.value = "";
+}
+
+function listen() {
+  const Recognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!Recognition) {
+    alert("Speech recognition is not supported here.");
+    return;
+  }
+
+  const recognition = new Recognition();
+  recognition.lang = "en-IN";
+
+  recognition.onresult = event => {
+    document.getElementById("message").value =
+      event.results[0][0].transcript;
+    sendMessage();
+  };
+
+  recognition.onerror = () => {
+    document.getElementById("status").textContent =
+      "Please try speaking again.";
+  };
+
+  recognition.start();
+}
+</script>
+</body>
+</html>
+
+
+
+
+
